@@ -2,5 +2,5 @@
 
 rm -f /config/deluge/deluged.pid
 
-deluged -c /config/deluge -L info -l /config/deluge/deluged.log
+deluged -c /config/deluge -L info -l /dev/stdout
 deluge-web -c /config/deluge
