@@ -3,4 +3,4 @@ A dockerfile to run Deluge torent client, based on Alpine Linux. It expects a  p
 
 This dockerfile uses a user with uid 647. Make sure this user has write access to the /config folder. 
 ##Example run command
-`docker run -d --restart=always --name SyncThing --volumes-from Data --volumes-from media -p 51360:5130/udp -p 8112:8112 -p 58846:58846 adamant/deluge`
+`docker run -d --restart=always --name SyncThing --volumes-from Data --volumes-from media -p 51360:51360/udp -p 8112:8112 -p 58846:58846 adamant/deluge`
