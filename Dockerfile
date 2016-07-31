@@ -1,13 +1,17 @@
 FROM alpine:3.4
+MAINTAINER Adam Dodman <adam.dodman@gmx.com>
+
+ENV UID=647 UNAME=deluge GID=990 GNAME=media
 
 ADD start.sh /start.sh
 
 RUN chmod +x /start.sh \
-	&& adduser -S -u 647 -H -s /usr/sbin/nologin deluge \
-	&& echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-	&& apk add --no-cache deluge@testing py-service_identity@testing
+ && addgroup -g $GID $GNAME \
+ && adduser -SH -u $UID -G $GNAME -s /usr/sbin/nologin $UNAME \
+ && echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+ && apk add --no-cache deluge@testing py-service_identity@testing
 
-USER deluge
+USER $UNAME
 
 VOLUME /config
 VOLUME /media
