@@ -13,12 +13,11 @@ RUN chmod +x /start.sh \
 
 USER $UNAME
 
-VOLUME /config
-VOLUME /media
 
+
+VOLUME ["/config", "/media"]
 EXPOSE 53160
 EXPOSE 53160/udp
 EXPOSE 8112
 EXPOSE 58846
-
 CMD ["/start.sh"]
