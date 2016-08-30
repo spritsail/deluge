@@ -2,6 +2,7 @@ FROM alpine:3.4
 MAINTAINER Adam Dodman <adam.dodman@gmx.com>
 
 ENV UID=647 UNAME=deluge GID=990 GNAME=media
+ENV PYTHON_EGG_CACHE=/config/deluge/eggcache
 
 ADD start.sh /start.sh
 
