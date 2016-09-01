@@ -9,7 +9,6 @@ ADD start.sh /start.sh
 RUN chmod +x /start.sh \
  && addgroup -g $GID $GNAME \
  && adduser -SH -u $UID -G $GNAME -s /usr/sbin/nologin $UNAME \
- && sed -i -e 's/v3\.4/edge/g' /etc/apk/repositories \
  && echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
  && apk add --no-cache deluge@testing py-pip \
  && pip install service_identity \
