@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.5
 MAINTAINER Adam Dodman <adam.dodman@gmx.com>
 
 ENV UID=647 UNAME=deluge GID=990 GNAME=media
