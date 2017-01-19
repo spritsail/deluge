@@ -10,9 +10,9 @@ RUN chmod +x /start.sh \
  && addgroup -g $GID $GNAME \
  && adduser -SH -u $UID -G $GNAME -s /usr/sbin/nologin $UNAME \
  && echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
- && apk add --no-cache deluge@testing py-pip \
+ && apk add --no-cache deluge@testing py2-pip \
  && pip install service_identity \
- && apk del --no-cache py-pip
+ && apk del --no-cache py2-pip
 
 USER $UNAME
 
