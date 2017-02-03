@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+[ -n "$UMASK" ] && umask "$UMASK"
+
+# Run in the foreground by default
+DAEMON='-d'
+
+for arg in $@; do
+    case $arg in
+        --bg) DAEMON='';;
+    esac
+done
+
+deluged $DAEMON -P $(mktemp) -c /config/deluge -L info -l /dev/stdout
