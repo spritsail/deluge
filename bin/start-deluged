@@ -12,4 +12,4 @@ for arg in $@; do
     esac
 done
 
-deluged $DAEMON -P $(mktemp) -c /config/deluge -L info -l /dev/stdout
+deluged $DAEMON -P $(mktemp) -c /config -L info -l /dev/stdout

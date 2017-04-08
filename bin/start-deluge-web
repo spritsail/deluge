@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
 
-deluge-web -c /config/deluge -L info -l /dev/stdout
+deluge-web -c /config -L info -l /dev/stdout

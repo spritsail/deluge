@@ -2,7 +2,7 @@ FROM alpine:3.5
 MAINTAINER Adam Dodman <adam.dodman@gmx.com>
 
 ENV UID=647 UNAME=deluge GID=990 GNAME=media
-ENV PYTHON_EGG_CACHE=/config/deluge/eggcache
+ENV PYTHON_EGG_CACHE=/config/eggcache
 
 RUN addgroup -g $GID $GNAME \
  && adduser -SH -u $UID -G $GNAME -s /usr/sbin/nologin $UNAME \
