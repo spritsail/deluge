@@ -1,7 +1,7 @@
 FROM alpine:3.5
 MAINTAINER Adam Dodman <adam.dodman@gmx.com>
 
-ENV UID=647 UNAME=deluge GID=990 GNAME=media
+ENV UID=902 UNAME=deluge GID=900 GNAME=media
 ENV PYTHON_EGG_CACHE=/config/eggcache
 
 RUN addgroup -g $GID $GNAME \
