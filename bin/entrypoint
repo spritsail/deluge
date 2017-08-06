@@ -3,4 +3,6 @@ set -e
 
 chmod 666 /dev/std*
 
+chown -R $UID:$GID /config
+
 exec su-exec "$UID:$GID" "$@"
