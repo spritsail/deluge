@@ -17,6 +17,7 @@ pipeline:
       - DOCKER_HOST=tcp://docker:2375
     commands:
       - apk --no-cache add curl
+      - mkdir -p config
       - echo "username:password:10" > config/auth
       - docker run --name=dev -d -p 8112:8112 -v $(pwd)/config:/config devbuild
       - sleep 5
