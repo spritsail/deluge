@@ -1,0 +1,40 @@
+services:
+  docker:
+    image: docker:dind
+    privileged: true
+
+pipeline:
+  build:
+    image: docker
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - docker build -t devbuild . 
+
+  test:
+    image: docker
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - apk --no-cache add curl
+      - echo "username:password:10" > config/auth
+      - docker run --name=dev -d -p 8112:8112 -v $(pwd)/config:/config devbuild
+      - sleep 5
+      - docker logs dev
+      - curl -sSL docker:8112 > /dev/null # Test webserver
+      - docker exec dev deluge-console 'connect localhost username password' # Test deluged
+      - docker kill dev # Not really needed, but keeps things quick
+
+  publish:
+    image: docker
+    secrets: [ DOCKER_USER, DOCKER_PASS ]
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    commands:
+      - echo $DOCKER_USER
+      - export CURVER=$(docker run --rm alpine sh -c 'echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories && apk --no-cache -x search deluge' | sed -n 's/deluge-//p')
+      - docker tag devbuild adamant/deluge:latest
+      - docker tag devbuild adamant/deluge:$CURVER
+      - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push adamant/deluge
+      - echo "CONGRATS! SUCCESSFULLY BUILT DELUGE"
