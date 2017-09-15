@@ -1,41 +1,37 @@
-services:
-  docker:
-    image: docker:dind
-    privileged: true
-
 pipeline:
   build:
     image: docker
-    environment:
-      - DOCKER_HOST=tcp://docker:2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker build -t devbuild . 
+      - docker build -t deluge-dev . 
 
   test:
     image: docker
-    environment:
-      - DOCKER_HOST=tcp://docker:2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - apk --no-cache add curl
       - mkdir -p config
       - echo "username:password:10" > config/auth
-      - docker run --name=dev -d -p 8112:8112 -v $(pwd)/config:/config devbuild
+      - CON_NAME=$(docker run --rm -d -p 8112:8112 -v $(pwd)/config:/config deluge-dev)
       - sleep 5
-      - docker logs dev
-      - curl -sSL docker:8112 > /dev/null # Test webserver
-      - docker exec dev deluge-console 'connect localhost username password' # Test deluged
-      - docker kill dev # Not really needed, but keeps things quick
+      - docker logs $$CON_NAME
+      - curl -sSL --max-time 3 --retry 5 --retry-delay 5 $(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $$CON_NAME):8112 > /dev/null # Test webserver
+      - docker exec $$CON_NAME deluge-console 'connect localhost username password' # Test deluged
+      - docker kill $$CON_NAME # Not really needed, but keeps things quick
 
   publish:
     image: docker
     secrets: [ DOCKER_USER, DOCKER_PASS ]
-    environment:
-      - DOCKER_HOST=tcp://docker:2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - echo $DOCKER_USER
       - export CURVER=$(docker run --rm alpine sh -c 'echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories && apk --no-cache -x search deluge' | sed -n 's/deluge-//p')
-      - docker tag devbuild adamant/deluge:latest
-      - docker tag devbuild adamant/deluge:$CURVER
+      - docker tag deluge-dev adamant/deluge:latest
+      - docker tag deluge-dev adamant/deluge:$CURVER
       - docker login -u $DOCKER_USER -p $DOCKER_PASS
       - docker push adamant/deluge
+      - docker rmi deluge-dev adamant/deluge
       - echo "CONGRATS! SUCCESSFULLY BUILT DELUGE"
