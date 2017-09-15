@@ -26,6 +26,8 @@ pipeline:
     secrets: [ DOCKER_USER, DOCKER_PASS ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: [push, tag, deployment]
     commands:
       - echo $DOCKER_USER
       - export CURVER=$(docker run --rm alpine sh -c 'echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories && apk --no-cache -x search deluge' | sed -n 's/deluge-//p')
