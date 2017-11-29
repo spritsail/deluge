@@ -41,5 +41,5 @@ pipeline:
       - docker tag deluge-dev adamant/deluge:$CURVER
       - docker login -u $DOCKER_USER -p $DOCKER_PASS
       - docker push adamant/deluge
-      - docker rmi deluge-dev adamant/deluge
+      - docker rmi deluge-dev adamant/deluge:latest adamant/deluge:$CURVER
       - echo "CONGRATS! SUCCESSFULLY BUILT DELUGE"
