@@ -14,10 +14,16 @@ pipeline:
       - apk --no-cache add curl
       - mkdir -p config
       - echo "username:password:10" > config/auth
-      - CON_NAME=$(docker run --rm -d -p 8112:8112 -v $(pwd)/config:/config deluge-dev)
+      - CON_NAME=$(docker run --rm -d -v $(pwd)/config:/config deluge-dev)
+      - timeout -t 12 -- docker logs -f $$CON_NAME | cat &
       - sleep 5
-      - docker logs $$CON_NAME
-      - curl -sSL --max-time 3 --retry 5 --retry-delay 5 $(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $$CON_NAME):8112 > /dev/null # Test webserver
+      - IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $$CON_NAME)
+      - if [ -z "$IP" ]; then
+            echo "The container exited.. sadpanda";
+            docker inspect --format='{{.State.ExitCode}}' $$CON_NAME;
+            exit 25;
+        fi
+      - curl -sSL --max-time 3 --retry 5 --retry-delay 5 --retry-connrefused $IP:8112 > /dev/null # Test webserver
       - docker exec $$CON_NAME deluge-console 'connect localhost username password' # Test deluged
       - docker kill $$CON_NAME # Not really needed, but keeps things quick
 
