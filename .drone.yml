@@ -4,7 +4,7 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker build --no-cache --pull -t deluge-dev . 
+      - docker build --no-cache --pull -t deluge-dev .
 
   test:
     image: docker
@@ -27,19 +27,27 @@ pipeline:
       - docker exec $$CON_NAME deluge-console 'connect localhost username password' # Test deluged
       - docker kill $$CON_NAME # Not really needed, but keeps things quick
 
+  identify:
+    image: alpine
+    comaands:
+      - echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories
+      - echo $(apk --no-cache -x search deluge | sed -n 's/deluge-//p') > .deluge_ver
+
   publish:
-    image: docker
-    secrets: [ DOCKER_USER, DOCKER_PASS ]
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    when:
-      event: [push, tag, deployment]
-    commands:
-      - echo $DOCKER_USER
-      - export CURVER=$(docker run --rm alpine sh -c 'echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories && apk --no-cache -x search deluge' | sed -n 's/deluge-//p')
-      - docker tag deluge-dev adamant/deluge:latest
-      - docker tag deluge-dev adamant/deluge:$CURVER
-      - docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push adamant/deluge
-      - docker rmi deluge-dev adamant/deluge:latest adamant/deluge:$CURVER
-      - echo "CONGRATS! SUCCESSFULLY BUILT DELUGE"
+    image: spritsail/docker-publish
+    volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
+    secrets: [ docker_username, docker_password, microbadger_token ]
+    when: { event: [ push, tag, deployment ] }
+    from: deluge-dev
+    repo: spritsail/deluge
+    tags:
+      - 'latest'
+      - '%fileauto: .deluge_ver'
+
+  notify:
+    image: appleboy/drone-telegram
+    when: { status: [ success, failure ] }
+    secrets: [ telegram_token, telegram_to ]
+    message: |
+      *{{repo.owner}}/{{repo.name}} [{{commit.branch}}]*: Build #{{build.number}}: *{{uppercase build.status}}*
+      {{build.link}}

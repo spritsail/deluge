@@ -1,5 +1,12 @@
 FROM alpine:edge
-MAINTAINER Adam Dodman <adam.dodman@gmx.com>
+
+LABEL maintainer="Spritsail <deluge@spritsail.io>" \
+      org.label-schema.vendor="Spritsail" \
+      org.label-schema.name="Deluge" \
+      org.label-schema.url="https://github.com/spritsail/deluge" \
+      org.label-schema.description="Deluge torrent andloader and its web interface." \
+      org.label-schema.version="FIXME"
+
 
 ENV UID=902 GID=900
 ENV PYTHON_EGG_CACHE=/config/eggcache
