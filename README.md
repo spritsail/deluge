@@ -3,7 +3,7 @@
 [drone]: https://drone.spritsail.io/spritsail/deluge
 [mbdg]: https://microbadger.com/images/spritsail/deluge
 
-# [spritsail/NZBGet][hub]
+# [spritsail/Deluge][hub]
 
 [![](https://images.microbadger.com/badges/image/spritsail/deluge.svg)][mbdg]
 [![Latest Version](https://images.microbadger.com/badges/version/spritsail/deluge.svg)][hub]
@@ -12,7 +12,6 @@
 [![Docker Stars](https://img.shields.io/docker/stars/spritsail/deluge.svg)][hub]
 [![Build Status](https://drone.spritsail.io/api/badges/spritsail/deluge/status.svg)][drone]
 
-# [spritsail/Deluge][hub]
 A dockerfile to run the Deluge torent client, based on Alpine Linux.  
 It expects a  partition to store data mapped to /config in the container, and a volume where your torrents should go stored at /media. Enjoy!
 
