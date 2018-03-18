@@ -29,7 +29,7 @@ pipeline:
 
   identify:
     image: alpine
-    comaands:
+    commands:
       - echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories
       - echo $(apk --no-cache -x search deluge | sed -n 's/deluge-//p') > .deluge_ver
 
