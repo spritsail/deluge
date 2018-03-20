@@ -1,15 +1,20 @@
 pipeline:
-  build:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  identify:
+    image: alpine
     commands:
-      - docker build --no-cache --pull -t deluge-dev .
+      - echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories
+      - echo $(apk --no-cache -x search deluge | sed -n 's/deluge-//p') > .deluge_ver
+
+  build:
+    image: spritsail/docker-build
+    volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
+    repo: deluge-dev
+    build_args:
+      - 'DELUGE_VER=%file: .deluge_ver'
 
   test:
     image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
     commands:
       - apk --no-cache add curl
       - mkdir -p config
@@ -26,12 +31,6 @@ pipeline:
       - curl -sSL --max-time 3 --retry 5 --retry-delay 5 --retry-connrefused $IP:8112 > /dev/null # Test webserver
       - docker exec $$CON_NAME deluge-console 'connect localhost username password' # Test deluged
       - docker kill $$CON_NAME # Not really needed, but keeps things quick
-
-  identify:
-    image: alpine
-    commands:
-      - echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories
-      - echo $(apk --no-cache -x search deluge | sed -n 's/deluge-//p') > .deluge_ver
 
   publish:
     image: spritsail/docker-publish
