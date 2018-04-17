@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM spritsail/alpine:edge
 
 ARG DELUGE_VER
 
@@ -15,7 +15,7 @@ ENV PYTHON_EGG_CACHE=/config/eggcache
 COPY bin/* /usr/local/bin/
 
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
- && apk add --no-cache deluge py2-pip su-exec tini \
+ && apk add --no-cache deluge py2-pip \
  && pip install service_identity twisted \
  && apk del --no-cache py2-pip \
  && chmod +x /usr/local/bin/*
