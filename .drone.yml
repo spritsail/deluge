@@ -1,16 +1,8 @@
 pipeline:
-  identify:
-    image: alpine
-    commands:
-      - echo http://dl-4.alpinelinux.org/alpine/edge/testing/ > /etc/apk/repositories
-      - echo $(apk --no-cache -x search deluge | sed -n 's/deluge-//p') > .deluge_ver
-
   build:
     image: spritsail/docker-build
     volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
     repo: deluge-dev
-    build_args:
-      - 'DELUGE_VER=%file: .deluge_ver'
 
   test:
     image: docker
@@ -36,12 +28,12 @@ pipeline:
     image: spritsail/docker-publish
     volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
     secrets: [ docker_username, docker_password, microbadger_token ]
-    when: { event: [ push, tag, deployment ] }
+    when: { branch: [ master], event: [ push, tag, deployment ] }
     from: deluge-dev
     repo: spritsail/deluge
     tags:
       - 'latest'
-      - '%fileauto: .deluge_ver'
+      - '%labelauto: io.spritsail.version.deluge'
 
   notify:
     image: spritsail/notify

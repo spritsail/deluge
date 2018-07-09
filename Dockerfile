@@ -1,23 +1,24 @@
-FROM spritsail/alpine:edge
+FROM spritsail/alpine:3.8
 
-ARG DELUGE_VER
+ARG DELUGE_VER=1.3.15
 
 LABEL maintainer="Spritsail <deluge@spritsail.io>" \
       org.label-schema.vendor="Spritsail" \
       org.label-schema.name="Deluge" \
       org.label-schema.url="https://deluge-torrent.org/" \
       org.label-schema.description="Deluge Torrent client and web interface." \
-      org.label-schema.version=${DELUGE_VER}
+      org.label-schema.version=${DELUGE_VER} \
+      io.spritsail.version.deluge=${DELUGE_VER}
 
 ENV UID=902 GID=900
 ENV PYTHON_EGG_CACHE=/config/eggcache
 
 COPY bin/* /usr/local/bin/
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
- && apk add --no-cache deluge py2-pip \
- && pip install service_identity twisted \
- && apk del --no-cache py2-pip \
+RUN apk --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
+        --no-cache add deluge py2-pip \
+ && pip2 --no-cache-dir install service_identity twisted \
+ && apk --no-cache del py2-pip \
  && chmod +x /usr/local/bin/*
 
 VOLUME ["/config", "/media"]
