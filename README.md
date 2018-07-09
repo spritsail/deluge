@@ -5,7 +5,7 @@
 
 # [spritsail/Deluge][hub]
 
-[![](https://images.microbadger.com/badges/image/spritsail/deluge.svg)][mbdg]
+[![Layers](https://images.microbadger.com/badges/image/spritsail/deluge.svg)][mbdg]
 [![Latest Version](https://images.microbadger.com/badges/version/spritsail/deluge.svg)][hub]
 [![Git Commit](https://images.microbadger.com/badges/commit/spritsail/deluge.svg)][git]
 [![Docker Pulls](https://img.shields.io/docker/pulls/spritsail/deluge.svg)][hub]
@@ -19,4 +19,6 @@ This dockerfile uses a user with uid 902, and a gid of 900. Make sure this user 
 The uid can be overridden by the environment variables `$UID` and `$GID` respectively.
 
 ## Example run command
-`docker run -d --restart=always --name Deluge -v /volumes/deluge:/confg -v /mnt/media:/media -p 51360:51360/udp -p 8112:8112 -p 58846:58846 spritsail/deluge`
+```
+docker run -d --restart=always --name=deluge -v host/path/to/config:/config -v host/path/to/downloads:/downloads -p 51360:51360/udp -p 8112:8112 -p 58846:58846 spritsail/deluge
+```
