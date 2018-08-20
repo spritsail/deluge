@@ -2,6 +2,7 @@
 set -e
 
 LOGFILE=/tmp/deluge-web-log
+rm -f $LOGFILE
 mkfifo $LOGFILE
 mkdir -p /config/logs
 tee /config/logs/deluge-web-$(date -u +"%FT%H%M").log < $LOGFILE &

@@ -13,6 +13,7 @@ for arg in $@; do
 done
 
 LOGFILE=/tmp/deluged-log
+rm -f $LOGFILE
 mkfifo $LOGFILE
 mkdir -p /config/logs
 tee /config/logs/deluged-$(date -u +"%FT%H%M").log < $LOGFILE &
