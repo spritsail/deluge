@@ -22,10 +22,10 @@ RUN apk --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
  && apk --no-cache del py2-pip \
  && chmod +x /usr/local/bin/*
 
-VOLUME ["/config", "/media"]
+VOLUME /config
+EXPOSE 8112
 EXPOSE 53160
 EXPOSE 53160/udp
-EXPOSE 8112
 EXPOSE 58846
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/entrypoint"]
