@@ -16,6 +16,7 @@ ENV PYTHON_EGG_CACHE=/config/eggcache
 COPY bin/* /usr/local/bin/
 
 RUN apk --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
+        --repository "http://dl-cdn.alpinelinux.org/alpine/edge/main" \
         --no-cache add deluge py2-pip \
  && pip2 --no-cache-dir install service_identity twisted \
  && apk --no-cache del py2-pip \
