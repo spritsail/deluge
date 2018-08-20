@@ -10,7 +10,7 @@ LABEL maintainer="Spritsail <deluge@spritsail.io>" \
       org.label-schema.version=${DELUGE_VER} \
       io.spritsail.version.deluge=${DELUGE_VER}
 
-ENV UID=902 GID=900
+ENV SUID=902 SGID=900
 ENV PYTHON_EGG_CACHE=/config/eggcache
 
 COPY bin/* /usr/local/bin/

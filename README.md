@@ -16,7 +16,7 @@ A dockerfile to run the Deluge torent client, based on Alpine Linux.
 It expects a  partition to store data mapped to /config in the container, and a volume where your torrents should go stored at /media. Enjoy!
 
 This dockerfile uses a user with uid 902, and a gid of 900. Make sure this user has write access to the /config folder.
-The uid can be overridden by the environment variables `$UID` and `$GID` respectively.
+The uid can be overridden by the environment variables `$SUID` and `$SGID` respectively.
 
 ## Example run command
 ```
