@@ -1,4 +1,9 @@
 #!/bin/sh
 set -e
 
-deluge-web -c /config -L info -l /dev/stdout
+LOGFILE=/tmp/deluge-web-log
+mkfifo $LOGFILE
+mkdir -p /config/logs
+tee /config/logs/deluge-web-$(date -u +"%FT%H%M").log < $LOGFILE &
+
+exec deluge-web -c /config -L info -l $LOGFILE
