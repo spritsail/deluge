@@ -29,7 +29,7 @@ pipeline:
     repo: spritsail/deluge
     tags:
       - 'latest'
-      - '%labelauto: io.spritsail.version.deluge'
+      - '%label io.spritsail.version.deluge | %auto'
 
   notify:
     image: spritsail/notify
