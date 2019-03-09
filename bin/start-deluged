@@ -12,7 +12,7 @@ for arg in $@; do
     esac
 done
 
-LOGFILE=/tmp/deluged-log
+LOGFILE=/tmp/deluged.log
 rm -f $LOGFILE
 mkfifo $LOGFILE
 mkdir -p /config/logs

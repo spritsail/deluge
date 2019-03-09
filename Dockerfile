@@ -22,6 +22,10 @@ RUN apk --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
  && apk --no-cache del py2-pip \
  && chmod +x /usr/local/bin/*
 
+HEALTHCHECK --start-period=10s --timeout=3s \
+    CMD (if [ -p /tmp/deluge-web.log ]; then wget -qSO /dev/null http://0.0.0.0:8112/; fi) && \
+        (if [ -p /tmp/deluged.log ]; then deluge-console "connect 0.0.0.0 $(sort /config/auth -k3,3 -nrt: | head -n1 | cut -d: -f1-2 | tr : ' ')" 2>&1 | wc -c | grep -qw 0; fi)
+
 VOLUME /config
 EXPOSE 8112
 EXPOSE 53160

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-LOGFILE=/tmp/deluge-web-log
+LOGFILE=/tmp/deluge-web.log
 rm -f $LOGFILE
 mkfifo $LOGFILE
 mkdir -p /config/logs
