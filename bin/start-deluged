@@ -15,7 +15,7 @@ done
 LOGFILE=/tmp/deluged.log
 rm -f $LOGFILE
 mkfifo $LOGFILE
-mkdir -p /config/logs
-tee /config/logs/deluged-$(date -u +"%FT%H%M").log < $LOGFILE &
+mkdir -p "$LOGDIR"
+tee "$LOGDIR/deluged-$(date -u +"%FT%H%M").log" < $LOGFILE &
 
 exec deluged $DAEMON -P $(mktemp) -c /config -L info -l $LOGFILE

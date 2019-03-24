@@ -4,7 +4,7 @@ set -e
 LOGFILE=/tmp/deluge-web.log
 rm -f $LOGFILE
 mkfifo $LOGFILE
-mkdir -p /config/logs
-tee /config/logs/deluge-web-$(date -u +"%FT%H%M").log < $LOGFILE &
+mkdir -p "$LOGDIR"
+tee "$LOGDIR/deluge-web-$(date -u +"%FT%H%M").log" < $LOGFILE &
 
 exec deluge-web -c /config -L info -l $LOGFILE

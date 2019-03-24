@@ -11,7 +11,8 @@ LABEL maintainer="Spritsail <deluge@spritsail.io>" \
       io.spritsail.version.deluge=${DELUGE_VER}
 
 ENV SUID=902 SGID=900
-ENV PYTHON_EGG_CACHE=/config/eggcache
+ENV PYTHON_EGG_CACHE=/config/eggcache \
+    LOGDIR=/config/logs
 
 COPY bin/* /usr/local/bin/
 
