@@ -1,37 +1,57 @@
-pipeline:
-  build:
-    image: spritsail/docker-build
-    volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
+---
+kind: pipeline
+name: deluge-2
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: build
+  pull: always
+  image: spritsail/docker-build
+  settings:
     repo: deluge-dev
 
-  test:
-    image: spritsail/docker-test
-    volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
+- name: test
+  pull: always
+  image: spritsail/docker-test
+  settings:
     repo: deluge-dev
     delay: 3
     verbose: true
     curl_opts: -o/dev/null -sS
-    # Test deluge-web is running and responding
     curl: ':8112'
     # Add a user and attempt connecting to the daemon
     exec_post: |
       echo "username:password:10" >> /config/auth;
-      deluge-console -l /dev/stdout -L info "connect localhost username password; quit"
+      sleep 2; # wait for deluged to detect auth change
+      deluge-console -l /dev/stdout -L deluge "connect localhost username password; quit"
           | tee /dev/stderr
           | grep -qF "Connection was closed cleanly"
 
-  publish:
-    image: spritsail/docker-publish
-    volumes: [ '/var/run/docker.sock:/var/run/docker.sock' ]
-    secrets: [ docker_username, docker_password, microbadger_token ]
-    when: { branch: [ master], event: [ push, tag, deployment ] }
+- name: publish
+  pull: always
+  image: spritsail/docker-publish
+  settings:
     from: deluge-dev
     repo: spritsail/deluge
     tags:
-      - 'latest'
-      - '%label io.spritsail.version.deluge | %auto'
+    - beta
+    - "%label io.spritsail.version.deluge"
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: docker_password
+    DOCKER_USERNAME:
+      from_secret: docker_username
+  when:
+    branch:
+    - deluge2
+    event:
+    - push
 
-  notify:
-    image: spritsail/notify
-    when: { status: [ success, failure ] }
-    secrets: [ webhook_url, notify_token ]
+---
+kind: signature
+hmac: de2065c1dc1db93a466c18909b9d06211f95903a8d5dd9cc19e5d23573b59931
+
+...

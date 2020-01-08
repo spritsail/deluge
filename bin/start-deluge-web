@@ -1,10 +1,19 @@
 #!/bin/sh
 set -e
 
+# Run in the foreground by default
+DAEMON='-d'
+
+for arg in $@; do
+    case $arg in
+        --bg) DAEMON='';;
+    esac
+done
+
 LOGFILE=/tmp/deluge-web.log
 rm -f $LOGFILE
 mkfifo $LOGFILE
 mkdir -p "$LOGDIR"
 tee "$LOGDIR/deluge-web-$(date -u +"%FT%H%M").log" < $LOGFILE &
 
-exec deluge-web -c /config -L info -l $LOGFILE
+exec deluge-web $DAEMON -c /config -L info -l $LOGFILE $DELUGE_WEB_OPTIONS

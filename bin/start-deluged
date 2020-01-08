@@ -18,4 +18,4 @@ mkfifo $LOGFILE
 mkdir -p "$LOGDIR"
 tee "$LOGDIR/deluged-$(date -u +"%FT%H%M").log" < $LOGFILE &
 
-exec deluged $DAEMON -P $(mktemp) -c /config -L info -l $LOGFILE
+exec deluged $DAEMON -c /config -L info -l $LOGFILE $DELUGED_OPTIONS
