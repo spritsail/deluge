@@ -37,21 +37,20 @@ steps:
     from: deluge-dev
     repo: spritsail/deluge
     tags:
-    - beta
+    - dev
     - "%label io.spritsail.version.deluge"
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
+    username:
       from_secret: docker_username
+    password:
+      from_secret: docker_password
   when:
     branch:
-    - deluge2
+    - dev
     event:
     - push
 
 ---
 kind: signature
-hmac: de2065c1dc1db93a466c18909b9d06211f95903a8d5dd9cc19e5d23573b59931
+hmac: 8fa4f014c8e9367aa71650162efcbb5350b6085c0599c568af0e467b8123e649
 
 ...
