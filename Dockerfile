@@ -1,6 +1,10 @@
+ARG DELUGE_VER=2.0.3
+ARG DELUGE_COMMIT=2f1c008a26b50ab3487bd03bcabb39347d441f23
+
 FROM spritsail/alpine:edge AS build
 
-ARG DELUGE_VER=2.0.3
+ARG DELUGE_VER
+ARG DELUGE_COMMIT
 
 RUN apk --no-cache add \
         gcc \
@@ -13,7 +17,8 @@ RUN apk --no-cache add \
 WORKDIR /tmp
 # Do not shallow close as Deluge uses git information to generate a version
 RUN git clone https://github.com/deluge-torrent/deluge.git . && \
-    python3 version.py && \
+    git reset --hard ${DELUGE_COMMIT} && \
+    echo ${DELUGE_VER} > RELEASE-VERSION && \
     python3 setup.py install --root=/deluge --prefix=/usr && \
     \
     cd /deluge && \
@@ -24,6 +29,8 @@ RUN git clone https://github.com/deluge-torrent/deluge.git . && \
         usr/lib/python*/*-packages/deluge/ui/gtk3/*
 
 FROM spritsail/alpine:edge
+
+ARG DELUGE_VER
 
 LABEL maintainer="Spritsail <deluge@spritsail.io>" \
       org.label-schema.vendor="Spritsail" \
@@ -38,7 +45,6 @@ ENV SUID=902 SGID=900 \
     LOGDIR=/config/logs
 
 RUN apk --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" --no-cache add \
-        #intltool \
         py3-chardet \
         py3-libtorrent-rasterbar \
         py3-mako \

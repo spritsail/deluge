@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: deluge-2
+name: deluge
 
 platform:
   os: linux
@@ -37,21 +37,20 @@ steps:
     from: deluge-dev
     repo: spritsail/deluge
     tags:
-    - beta
-    - "%label io.spritsail.version.deluge"
-  environment:
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-    DOCKER_USERNAME:
+    - latest
+    - "%label io.spritsail.version.deluge | %auto"
+    username:
       from_secret: docker_username
+    password:
+      from_secret: docker_password
   when:
     branch:
-    - deluge2
+    - master
     event:
     - push
 
 ---
 kind: signature
-hmac: de2065c1dc1db93a466c18909b9d06211f95903a8d5dd9cc19e5d23573b59931
+hmac: b2b81d19f8fe1c3198771372bc2d77a0359eced91bb069ed830e791473b1d930
 
 ...
