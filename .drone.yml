@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: deluge-2
+name: deluge-dev
 
 platform:
   os: linux
@@ -51,6 +51,6 @@ steps:
 
 ---
 kind: signature
-hmac: 8fa4f014c8e9367aa71650162efcbb5350b6085c0599c568af0e467b8123e649
+hmac: 402777b62b8bc9a2a190e4b7437bb6ba21f30cbbab612413e68f524ac59bef68
 
 ...
