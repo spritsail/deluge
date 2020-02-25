@@ -65,9 +65,6 @@ HEALTHCHECK --start-period=10s --timeout=3s \
 
 VOLUME /config
 EXPOSE 8112
-EXPOSE 53160
-EXPOSE 53160/udp
-EXPOSE 58846
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/entrypoint"]
 CMD ["start-deluge"]

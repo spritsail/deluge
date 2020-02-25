@@ -20,5 +20,5 @@ The uid can be overridden by the environment variables `$SUID` and `$SGID` respe
 
 ## Example run command
 ```
-docker run -d --restart=always --name=deluge -v host/path/to/config:/config -v host/path/to/downloads:/downloads -p 51360:51360/udp -p 8112:8112 -p 58846:58846 spritsail/deluge
+docker run -d --restart=always --name=deluge -v host/path/to/config:/config -v host/path/to/downloads:/downloads -p 8112:8112 spritsail/deluge
 ```
